@@ -83,8 +83,43 @@ function updateChart(incomeValue, expenseValue) {
 }
 const toggleBtn = document.getElementById("toggleMode");
 
-toggleBtn.addEventListener("click", () => {
-    document.body.classList.toggle("dark");
-});
+if (toggleBtn) {
+    toggleBtn.addEventListener("click", () => {
+        document.body.classList.toggle("dark");
+        toggleBtn.classList.toggle('active');
+    });
+}
+function generateMonthlyReport() {
+
+    let month = new Date().getMonth();
+    let monthlyTotal = 0;
+
+    transactions.forEach(t => {
+        if (new Date().getMonth() === month) {
+            monthlyTotal += t.amount;
+        }
+    });
+
+    document.getElementById("monthlyReport").innerText =
+        "This Month Balance: ₹" + monthlyTotal;
+}
+function downloadPDF() {
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.text("Expense Report", 10, 10);
+
+    let y = 20;
+
+    transactions.forEach(t => {
+        doc.text(`${t.text} : ₹${t.amount}`, 10, y);
+        y += 10;
+    });
+
+    doc.save("report.pdf");
+}
+
+generateMonthlyReport();
 
 updateUI();

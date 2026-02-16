@@ -16,10 +16,25 @@
     </div>
 
     <form id="form">
-        <input type="text" id="text" placeholder="Description" required>
-        <input type="number" id="amount" placeholder="Amount (+ income, - expense)" required>
-        <button>Add Transaction</button>
-    </form>
+    <input type="text" id="text" placeholder="Description" required>
+
+    <input type="number" id="amount" placeholder="Amount (+ income, - expense)" required>
+
+    <select id="category">
+        <option value="Food">Food</option>
+        <option value="Travel">Travel</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Bills">Bills</option>
+        <option value="Other">Other</option>
+    </select>
+
+    <button>Add Transaction</button>
+</form>
+
+<canvas id="myChart"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
     <ul id="list"></ul>
 

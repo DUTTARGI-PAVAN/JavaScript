@@ -43,3 +43,16 @@ li {
     display: flex;
     justify-content: space-between;
 }
+.dark {
+    background: #121212;
+    color: white;
+}
+
+.dark .container {
+    background: #1e1e1e;
+    color: white;
+}
+
+.dark li {
+    background: #333;
+}

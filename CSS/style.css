@@ -63,3 +63,9 @@ body{
 .dark .txn-form input,.dark .txn-form select{background:#0b1220;border:1px solid rgba(255,255,255,0.04);color:#e6eef8}
 .dark .txns li{background:linear-gradient(180deg,#0c1320,#0b1220)}
 
+.txns button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  margin-left: 8px;
+}

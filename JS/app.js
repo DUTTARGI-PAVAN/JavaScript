@@ -3,10 +3,13 @@ const list = document.getElementById("list");
 const balance = document.getElementById("balance");
 const income = document.getElementById("income");
 const expense = document.getElementById("expense");
+const monthlyReport = document.getElementById("monthlyReport");
 
 let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 
 let chart;
+
+// ================= UPDATE UI =================
 
 function updateUI() {
 
@@ -21,8 +24,14 @@ function updateUI() {
         const li = document.createElement("li");
 
         li.innerHTML = `
-            ${t.text} (${t.category}) : ₹${t.amount}
-            <button onclick="deleteTransaction(${index})">X</button>
+            <div>
+                <strong>${t.text}</strong>
+                <div class="meta">${t.category} • ${t.date}</div>
+            </div>
+            <div>
+                ₹${t.amount}
+                <button onclick="deleteTransaction(${index})">❌</button>
+            </div>
         `;
 
         list.appendChild(li);
@@ -40,12 +49,17 @@ function updateUI() {
     localStorage.setItem("transactions", JSON.stringify(transactions));
 
     updateChart(inc, Math.abs(exp));
+    generateMonthlyReport();
 }
+
+// ================= DELETE =================
 
 function deleteTransaction(index) {
     transactions.splice(index, 1);
     updateUI();
 }
+
+// ================= ADD TRANSACTION =================
 
 form.addEventListener("submit", (e) => {
 
@@ -55,15 +69,20 @@ form.addEventListener("submit", (e) => {
     const amount = Number(document.getElementById("amount").value);
     const category = document.getElementById("category").value;
 
+    const today = new Date().toLocaleDateString();
+
     transactions.push({
         text,
         amount,
-        category
+        category,
+        date: today
     });
 
     updateUI();
     form.reset();
 });
+
+// ================= CHART =================
 
 function updateChart(incomeValue, expenseValue) {
 
@@ -81,28 +100,39 @@ function updateChart(incomeValue, expenseValue) {
         }
     });
 }
+
+// ================= DARK MODE =================
+
 const toggleBtn = document.getElementById("toggleMode");
 
 if (toggleBtn) {
     toggleBtn.addEventListener("click", () => {
         document.body.classList.toggle("dark");
-        toggleBtn.classList.toggle('active');
+        toggleBtn.classList.toggle("active");
     });
 }
+
+// ================= MONTHLY REPORT =================
+
 function generateMonthlyReport() {
 
-    let month = new Date().getMonth();
+    let currentMonth = new Date().getMonth();
     let monthlyTotal = 0;
 
     transactions.forEach(t => {
-        if (new Date().getMonth() === month) {
+
+        let txnDate = new Date(t.date);
+        if (txnDate.getMonth() === currentMonth) {
             monthlyTotal += t.amount;
         }
+
     });
 
-    document.getElementById("monthlyReport").innerText =
-        "This Month Balance: ₹" + monthlyTotal;
+    monthlyReport.innerText = "This Month Balance: ₹ " + monthlyTotal;
 }
+
+// ================= PDF =================
+
 function downloadPDF() {
 
     const { jsPDF } = window.jspdf;
@@ -113,13 +143,13 @@ function downloadPDF() {
     let y = 20;
 
     transactions.forEach(t => {
-        doc.text(`${t.text} : ₹${t.amount}`, 10, y);
+        doc.text(`${t.text} (${t.category}) : ₹${t.amount}`, 10, y);
         y += 10;
     });
 
     doc.save("report.pdf");
 }
 
-generateMonthlyReport();
+// ================= INIT =================
 
 updateUI();
